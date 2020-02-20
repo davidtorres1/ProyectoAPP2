@@ -1,4 +1,4 @@
-    package com.example.prueba;
+    package com.example.proyectoAPP2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
