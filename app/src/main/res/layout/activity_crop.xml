@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".Crop">
 
     <!-- Image Cropper fill the remaining available height -->
+
     <ImageView
         android:id="@+id/imagen"
         android:layout_width="match_parent"
-        android:layout_height="523dp"
+        android:layout_height="521dp"
+        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,17 +23,31 @@
 
     <SeekBar
         android:id="@+id/seekBar"
+        style="@android:style/Widget.DeviceDefault.Light.SeekBar"
         android:layout_width="match_parent"
-        android:layout_height="93dp"
+        android:layout_height="122dp"
         android:layout_weight="1"
+        android:foregroundTint="@color/colorPrimaryDark"
+        android:indeterminate="false"
         android:max="255"
-        android:min="0" />
+        android:min="0"
+        android:outlineSpotShadowColor="@color/color1"
+        android:progress="@integer/default_title_indicator_line_position"
+        android:progressBackgroundTint="@color/colorAccent"
+        android:progressTint="@color/color3" />
 
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:layout_width="200dp"
+        android:background="@drawable/shape_signup"
+        android:textColor="#FFFFFF"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/conformable"
+        android:textSize="26dp"
+        android:textAllCaps="false"
+        android:text="Enviar" />
 
 
 </LinearLayout>

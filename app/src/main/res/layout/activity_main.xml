@@ -16,8 +16,22 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/imageUser"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_custom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/user" />
 
     <ImageButton
         android:id="@+id/imgCapture"
@@ -37,15 +51,30 @@
         android:id="@+id/btnGaleria"
         android:layout_width="65dp"
         android:layout_height="63dp"
+        android:layout_marginStart="20dp"
         android:background="@drawable/button_custom"
         android:contentDescription="imagen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgCapture"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.91"
         app:srcCompat="@drawable/art"
+        tools:ignore="HardcodedText" />
+
+    <ImageButton
+        android:id="@+id/btnHistoty"
+        android:layout_width="65dp"
+        android:layout_height="63dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/button_custom"
+        android:contentDescription="imagen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgCapture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.91"
+        app:srcCompat="@drawable/clock"
         tools:ignore="HardcodedText" />
 
 

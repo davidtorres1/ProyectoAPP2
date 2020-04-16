@@ -55,8 +55,22 @@ public class MainActivity extends AppCompatActivity {
         if(ori != 0) textureView = findViewById(R.id.layLand);
         Log.wtf("flag", flag+"");
         ImageView btnGal = findViewById(R.id.btnGaleria);
+        ImageView btnHsory = findViewById(R.id.btnHistoty);
+        ImageView btnUsr = findViewById(R.id.imageUser);
+        btnUsr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Login.class));
+            }
+        });
        //Log.wtf("width on create ",lay.getMeasuredWidth()+"");
        //Log.wtf("width on create ",lay.getMeasuredHeight()+"");
+        btnHsory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Galeria.class));
+            }
+        });
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         h = displayMetrics.heightPixels;

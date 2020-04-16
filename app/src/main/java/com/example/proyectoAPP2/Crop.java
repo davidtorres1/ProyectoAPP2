@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -63,6 +64,7 @@ public class Crop extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
+
         crpImage = findViewById(R.id.imagen);
         intent = getIntent();
         int com = intent.getIntExtra("com",-1);
@@ -106,7 +108,7 @@ public class Crop extends AppCompatActivity {
                         85, 85, 85, 0, -x * 255,
                         0, 0, 0, 1, 0 };
                 ColorMatrix matrix = new ColorMatrix();
-                matrix.setSaturation(0);
+                //matrix.setSaturation(0);
                 matrix.set(colorTransform);
                 ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                 crpImage.setColorFilter(filter);
@@ -139,11 +141,23 @@ public class Crop extends AppCompatActivity {
     }
 
     public void submit(){
+        final SQLiteDatabase db = this.openOrCreateDatabase(
+                "ScanImages",
+                MODE_ENABLE_WRITE_AHEAD_LOGGING,
+                null);
         crpImage.buildDrawingCache();
         Bitmap bmp = crpImage.getDrawingCache();
         File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
         String filename = "holasss";
-        File file = new File(storageLoc, filename + ".jpg");
+        File file = new File(storageLoc, filename + System.currentTimeMillis() + ".jpg");
+        try{
+            String f = file+"";
+            String d = "Se va a morir";
+                db.execSQL("insert into tblAMIGO(file , descr) values ('"+f+"', '"+d+"');");
+            db.setTransactionSuccessful(); //commit your changes
+        }catch (Exception e) {
+            Log.getStackTraceString(e);
+        }
         try{
             FileOutputStream fos = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -220,7 +234,7 @@ public class Crop extends AppCompatActivity {
                 85, 85, 85, 0, -x * 255,
                 0, 0, 0, 1, 0 };
         ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
+        //matrix.setSaturation(0);
         matrix.set(colorTransform);
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
         crpImage.setColorFilter(filter);
