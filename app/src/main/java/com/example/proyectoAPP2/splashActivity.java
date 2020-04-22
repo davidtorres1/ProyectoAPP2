@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO checar bien que royo aqui
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
@@ -23,17 +24,20 @@ import android.view.WindowManager;
                 startActivity(intent);
                 finish();
             }
-        }, 500);
+        }, 1000);
         final SQLiteDatabase db = this.openOrCreateDatabase(
                 "ScanImages",
                 MODE_ENABLE_WRITE_AHEAD_LOGGING,
                 null);
         try {
-            //perform your database operations here ...
-            db.execSQL("create table tblAMIGO ("
+            //perform your database operations here ..accuracy, String ecg_id, String result, String resultIndex, String imageLocation
+            db.execSQL("create table imagesRes ("
                     + " recID integer PRIMARY KEY autoincrement, "
-                    + " file text, "
-                    + " descr text ); " );
+                    + "accuracy text,"
+                    + "ecg_id text,"
+                    + "result text,"
+                    + "resultIndex text,"
+                    + " imageLocation text );");
             db.setTransactionSuccessful(); //commit your changes
         }
         catch (SQLiteException e) {

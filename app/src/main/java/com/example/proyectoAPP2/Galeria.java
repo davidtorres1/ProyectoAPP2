@@ -3,25 +3,15 @@ package com.example.proyectoAPP2;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-
-import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import com.android.volley.toolbox.StringRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +20,6 @@ public class Galeria extends AppCompatActivity {
     InfoAdapter adapter;
     List<Info> models;
     Integer[] colors = null;
-    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
     SQLiteDatabase db;
     Context context;
 
@@ -109,26 +98,26 @@ public class Galeria extends AppCompatActivity {
     public void eliminar(String file){
         String [] whereArgs = {file};
         //Toast.makeText(getApplicationContext(),whereArgs[0], Toast.LENGTH_LONG).show();
-        int recAffected = db.delete( "tblAMIGO", "file = ?", whereArgs);
+        int recAffected = db.delete( "imagesRes", "imageLocation = ?", whereArgs);
         Toast.makeText(getApplicationContext(),"status = " + recAffected,Toast.LENGTH_SHORT).show();
         update();
 
     }
     public void update(){
         models = new ArrayList<>();
-        String sql = "select * from tblAmigo";
+        String sql = "select * from imagesRes";
         Cursor c1 = db.rawQuery(sql, null);
         if(c1 != null){
             c1.moveToPosition(-1);
             while (c1.moveToNext()) {
                 int recId = c1.getInt(0);
-                String name = c1.getString(1);
-                String phone = c1.getString(2);
-                Log.wtf("nombre", name);
-                if (name != null) {
-                    models.add(new Info(name, phone));
+                String descripcion = c1.getString(3);
+                String path = c1.getString(5);
+                Log.wtf("nombre", descripcion);
+                if (descripcion != null) {
+                    models.add(new Info(path, descripcion));
                 }
-                Log.wtf("tel", phone);
+                Log.wtf("tel", path);
             }
             c1.close();
         }

@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Telephony;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -34,30 +35,42 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Crop extends AppCompatActivity {
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
+
+public class Crop extends AppCompatActivity{
     ImageView crpImage;
     private int GalleryPick = 1;
     Uri imagenUri;
     Intent intent;
     SeekBar sb;
+    SQLiteDatabase db;
     String imageLocation;
     int x = 80;
     @Override
@@ -113,7 +126,6 @@ public class Crop extends AppCompatActivity {
                 ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                 crpImage.setColorFilter(filter);
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -141,30 +153,19 @@ public class Crop extends AppCompatActivity {
     }
 
     public void submit(){
-        final SQLiteDatabase db = this.openOrCreateDatabase(
-                "ScanImages",
-                MODE_ENABLE_WRITE_AHEAD_LOGGING,
-                null);
         crpImage.buildDrawingCache();
         Bitmap bmp = crpImage.getDrawingCache();
         File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
         String filename = "holasss";
         File file = new File(storageLoc, filename + System.currentTimeMillis() + ".jpg");
-        try{
-            String f = file+"";
-            String d = "Se va a morir";
-                db.execSQL("insert into tblAMIGO(file , descr) values ('"+f+"', '"+d+"');");
-            db.setTransactionSuccessful(); //commit your changes
-        }catch (Exception e) {
-            Log.getStackTraceString(e);
-        }
+        imageLocation = file.toString();
         try{
             FileOutputStream fos = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.close();
             scanFile(getApplicationContext(), Uri.fromFile(file));
-            //Toast.makeText(getApplicationContext(),file+"",Toast.LENGTH_LONG).show();
-            send(bmp);
+            String image = imageToString(bmp);
+            send(image);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -172,41 +173,69 @@ public class Crop extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    public void send(final Bitmap bitmap){
+    public void send(String bitmap){
       Toast.makeText(getApplicationContext(),"enviando...", Toast.LENGTH_LONG).show();
-      String url = "http://192.168.1.72//pruebaImagen.php";
-        final StringRequest string = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(),error + "",Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                String imageData = imageToString(bitmap);
-                params.put("image",imageData);
-                return params;
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(Crop.this);
-        requestQueue.add(string);
-
+        String url = "https://ecg-super-api.herokuapp.com/predict";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("image", bitmap);
+        JSONObject jsonObj = new JSONObject(params);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObj,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // display response
+                        Log.wtf("Response", response.toString());
+                        try{
+                            boolean status = response.getBoolean("error");
+                            Log.wtf("error", status+"");
+                            if(!status){
+                                JSONObject res = response.getJSONObject("data");
+                                String accuracy = res.getString("accuracy");
+                                String ecg_id = res.getString("ecg_id");
+                                String result = res.getString("result");
+                                String resultIndex = res.getString("resultIndex");
+                                //TODO insertar estos datos en la base de datos junto con el path de la imagen
+                                insertar(accuracy,ecg_id,result,resultIndex,imageLocation);
+                                startActivity(new Intent(getApplicationContext(), Galeria.class));
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Se ha producido un error, por favor intentelo de nuevo en unos minutos",Toast.LENGTH_LONG).show();
+                            }
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.wtf("Error.Response", error);
+                    }
+                }
+        );
+        queue.add(getRequest);
     }
     private String imageToString(Bitmap bitmap){
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
         byte[] imageBytes = outputStream.toByteArray();
         String encodedString = Base64.encodeToString(imageBytes,Base64.DEFAULT);
-        Log.wtf("string",encodedString);
         return encodedString;
+    }
+    public void insertar(String accuracy, String ecg_id, String result, String resultIndex, String imageLocation){
+        SQLiteDatabase db = this.openOrCreateDatabase(
+                "ScanImages",
+                MODE_ENABLE_WRITE_AHEAD_LOGGING,
+                null);
+        try{
+            db.execSQL("insert into imagesRes(accuracy, ecg_id, result, resultIndex, imageLocation) values " +
+                            "('"+accuracy+"', '"+ecg_id+"', '"+result+"', '"+resultIndex+"', '"+imageLocation+"');");
+            db.setTransactionSuccessful(); //commit your changes
+        }catch (Exception e) {
+            Log.getStackTraceString(e);
+        }
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -240,10 +269,6 @@ public class Crop extends AppCompatActivity {
         crpImage.setColorFilter(filter);
 
     }
-    public void contrasts(Uri uri){
-
-    }
-
     public void crop(Uri uri){
         CropImage.activity(uri)
         .setBackgroundColor(Color.argb(200,20,20,238))

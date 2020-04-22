@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(),Login.class));
             }
         });
-       //Log.wtf("width on create ",lay.getMeasuredWidth()+"");
-       //Log.wtf("width on create ",lay.getMeasuredHeight()+"");
         btnHsory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
