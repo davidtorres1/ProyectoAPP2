@@ -272,7 +272,6 @@ public class Crop extends AppCompatActivity{
     public void crop(Uri uri){
         CropImage.activity(uri)
         .setBackgroundColor(Color.argb(200,20,20,238))
-                .setAspectRatio(2,1)
                 .setActivityTitle("MIA")
                 .setAllowRotation(true)
                 .setAllowFlipping(false)
