@@ -9,12 +9,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp">
+        android:layout_height="239dp">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/oplogo1" />
     </RelativeLayout>
 
@@ -23,6 +23,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="30dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/conformable"
+            android:text="Nombre"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_login"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:singleLine="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -36,7 +58,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/etMail"
+            android:id="@+id/Email"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
@@ -60,7 +82,30 @@
             android:layout_marginRight="20dp"/>
 
         <EditText
-            android:id="@+id/etPass"
+            android:id="@+id/pass1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_login"
+            android:gravity="center"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:text="Confirme su contraseña"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:fontFamily="@font/conformable"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <EditText
+            android:id="@+id/pass2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
@@ -71,7 +116,7 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -79,41 +124,12 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_signup"
             android:fontFamily="@font/conformable"
-            android:text="Log In"
+            android:text="Registrate"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Don't have an account?"
-            android:fontFamily="@font/conformable"
-            android:layout_marginLeft="90dp" />
-
-        <TextView
-            android:id="@+id/signUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:fontFamily="@font/conformable"
-            android:text="Sign Up"
-            android:textColor="@color/colorPrimary" />
-
-    </LinearLayout>
-
-
-
-
 
 </LinearLayout>

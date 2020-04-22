@@ -21,7 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Galeria"></activity>
+        <activity android:name=".profile"></activity>
+        <activity android:name=".Sign" />
+        <activity android:name=".Galeria" />
         <activity android:name=".Crop" />
         <activity android:name=".Login" />
         <activity android:name=".splashActivity">

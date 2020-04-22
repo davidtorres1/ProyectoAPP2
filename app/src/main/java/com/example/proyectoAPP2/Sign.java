@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,42 +23,40 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Login extends AppCompatActivity {
-    TextView signUp, login;
-    EditText email, pass;
+public class Sign extends AppCompatActivity {
+    Button btnReg;
+    EditText name, email, pass1, pass2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        login = findViewById(R.id.btnLogin);
-        login.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_sign);
+        btnReg = findViewById(R.id.register);
+        email = findViewById(R.id.Email);
+        name = findViewById(R.id.Name);
+        pass1 = findViewById(R.id.pass1);
+        pass2 = findViewById(R.id.pass2);
+        btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email = findViewById(R.id.etMail);
-                pass = findViewById(R.id.etPass);
+                String nameS = name.getText().toString();
                 String emailS = email.getText().toString();
-                String passS = pass.getText().toString();
-                if(!emailS.isEmpty() && !passS.isEmpty()){
-                    login(emailS,passS);
+                String pass1S = pass1.getText().toString();
+                String pass2S = pass2.getText().toString();
+                if(pass1S.equals(pass2S) &&!pass1S.isEmpty() && !emailS.isEmpty()){
+                    register(nameS, emailS,pass1S);
                 }else{
-                    Toast.makeText(getApplicationContext(),"errroroorrooror",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"errorrrr",Toast.LENGTH_SHORT).show();
                 }
-
-            }
-        });
-        signUp = findViewById(R.id.signUp);
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Sign.class));
             }
         });
     }
-
-    public void login(String email, String pass){
-        String url = "https://ecg-super-api.herokuapp.com/login";
+    public void register(String name, String email, String pass){
+        Log.wtf("email: ", email);
+        Log.wtf("pass: ", pass);
+        String url = "https://ecg-super-api.herokuapp.com/register";
         Map<String, String> params = new HashMap<String, String>();
         params.put("password",pass);
+        params.put("name",name);
         params.put("email", email);
         JSONObject jsonObj = new JSONObject(params);
         Log.wtf("jsonObjt", jsonObj+"");
@@ -100,5 +98,6 @@ public class Login extends AppCompatActivity {
                 }
         );
         queue.add(getRequest);
+
     }
 }

@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -66,9 +67,11 @@ import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 public class Crop extends AppCompatActivity{
     ImageView crpImage;
+    ProgressBar load;
     private int GalleryPick = 1;
     Uri imagenUri;
     Intent intent;
+    Button btn;
     SeekBar sb;
     SQLiteDatabase db;
     String imageLocation;
@@ -77,13 +80,14 @@ public class Crop extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
-
+        load = findViewById(R.id.progressBar);
+        load.setVisibility(View.INVISIBLE);
         crpImage = findViewById(R.id.imagen);
         intent = getIntent();
         int com = intent.getIntExtra("com",-1);
         switch (com){
             case 1:
-                Toast.makeText(this,"camara",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"camara",Toast.LENGTH_SHORT).show();
                 String imagen = intent.getStringExtra("image_path");
                 if(imagen != null){
                     imagenUri = Uri.parse(imagen);
@@ -91,14 +95,15 @@ public class Crop extends AppCompatActivity{
                 }
                 break;
             case 2:
-                Toast.makeText(this,"galeria",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,"galeria",Toast.LENGTH_SHORT).show();
                 //crop();
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, GalleryPick);
                 break;
              default:
-                 Toast.makeText(this,"ya valio chilindrin",Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(this,"ya valio chilindrin",Toast.LENGTH_SHORT).show();
+
                  break;
         }
         crpImage = findViewById(R.id.imagen);
@@ -136,7 +141,7 @@ public class Crop extends AppCompatActivity{
 
             }
         });
-        Button btn = findViewById(R.id.btnSubmit);
+        btn = findViewById(R.id.btnSubmit);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +170,7 @@ public class Crop extends AppCompatActivity{
             fos.close();
             scanFile(getApplicationContext(), Uri.fromFile(file));
             String image = imageToString(bmp);
+            loading(true);
             send(image);
 
         } catch (FileNotFoundException e) {
@@ -199,9 +205,12 @@ public class Crop extends AppCompatActivity{
                                 insertar(accuracy,ecg_id,result,resultIndex,imageLocation);
                                 startActivity(new Intent(getApplicationContext(), Galeria.class));
                             }else{
+                                loading(false);
                                 Toast.makeText(getApplicationContext(),"Se ha producido un error, por favor intentelo de nuevo en unos minutos",Toast.LENGTH_LONG).show();
                             }
                         }catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(),"Se ha producido un error, por favor intentelo de nuevo en unos minutos",Toast.LENGTH_LONG).show();
+                            loading(false);
                             e.printStackTrace();
                         }
                     }
@@ -211,6 +220,8 @@ public class Crop extends AppCompatActivity{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.wtf("Error.Response", error);
+                        Toast.makeText(getApplicationContext(),"Se ha producido un error, por favor intentelo de nuevo en unos minutos",Toast.LENGTH_LONG).show();
+                        loading(false);
                     }
                 }
         );
@@ -278,5 +289,19 @@ public class Crop extends AppCompatActivity{
                 .setCropMenuCropButtonIcon(R.drawable.oplogo1)
                 .start(this);
         Toast.makeText(this,uri +" ",Toast.LENGTH_SHORT).show();
+    }
+    public void loading(boolean flag){
+        if(flag){
+            crpImage.setVisibility(View.INVISIBLE);
+            sb.setVisibility(View.INVISIBLE);
+            btn.setVisibility(View.INVISIBLE);
+            load.setVisibility(View.VISIBLE);
+        }else{
+            crpImage.setVisibility(View.VISIBLE);
+            sb.setVisibility(View.VISIBLE);
+            btn.setVisibility(View.VISIBLE);
+            load.setVisibility(View.INVISIBLE);
+        }
+
     }
 }
