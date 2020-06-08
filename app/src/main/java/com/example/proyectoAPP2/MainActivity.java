@@ -1,5 +1,7 @@
 package com.example.proyectoAPP2;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     //private Context context = this;
     int h,w;
     private int REQUEST_CODE_PERMISSIONS = 101;
-    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+    private final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     TextureView textureView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onError(@NonNull ImageCapture.UseCaseError useCaseError,
                                         @NonNull String message, @Nullable Throwable cause) {
                         String msg = "Pic capture failed : " + message;
-                        Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getBaseContext(), msg,Toast.LENGTH_LONG).show();
                         if(cause != null){
                             cause.printStackTrace();
                         }
